@@ -1,0 +1,247 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>obfuscation detection demot</title>
+  </head>
+  <body>
+
+  <div class="container">
+    <h1 class="pt-4 pb-2">obfuscation detection demo</h1>
+    <h2 class="pb-2">On Improvements of Robustness of Obfuscated JavaScript Code Detection</h2>
+    <h4 class="pb-4"><a href="/ru">Russian version</a></h4>
+
+
+
+    <form>
+      <div class="form-group">
+        <textarea class="form-control" id="codeTextArea" rows="7"
+                  placeholder="Paste a Javascript code sample..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" id="obfuscationCheckButton">Evaluate</button>
+    </form>
+
+    <div style="height: 70px;">
+      <div class="pb-4" id="checkLoading" style="display:none;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+
+      <div class="alert alert-success" id="nonObfuscatedAlert" role="alert" style="display:none;">
+        Obfuscation is not detected
+      </div>
+      <div class="alert alert-danger" id="obfuscatedAlert" role="alert" style="display:none;">
+        Obfuscation is detected
+      </div>
+      <div class="alert alert-secondary" id="toSmallAlert" role="alert" style="display:none;">
+        Provided script is to small. The abstract syntax tree should contain at least 25 vertexes.
+      </div>
+      <div class="alert alert-warning" id="processingErrorAlert" role="alert" style="display:none;">
+        An error occured during the processing. Probably provided code sample is not a valid Javascript program.
+      </div>
+    </div>
+
+    <div class="pt-3 pb-2">
+      <h3>Code samples</h3>
+    </div>
+
+
+    <div class="border my-3 px-2 pt-2">
+      <pre><code id="obfuscatedCodeSample">var _0x6f26 = ['Hello\x20World!'];
+(function(_0x2f18c7, _0x6f2649) {
+    var _0x5dff7d = function(_0x5efd24) { while (--_0x5efd24) { _0x2f18c7['push'](_0x2f18c7['shift']()); } };
+    _0x5dff7d(++_0x6f2649);
+}(_0x6f26, 0x12a));
+var _0x5dff = function(_0x2f18c7, _0x6f2649) { _0x2f18c7 = _0x2f18c7 - 0x0; var _0x5dff7d = _0x6f26[_0x2f18c7]; return _0x5dff7d; };
+
+function hi() { console['log'](_0x5dff('0x0')); } hxi();</code></pre>
+    </div>
+    <button type="submit" class="btn btn-info mb-5" id="obfuscatedSampleCheckButton">Evaluate sample</button>
+
+    <div class="border my-3 px-2 pt-2">
+      <pre><code id="benignCodeSample">function inner(data) {
+  var placement = data.placement;
+  var basePlacement = placement.split('-')[0];
+  var _data$offsets = data.offsets,
+      popper = _data$offsets.popper,
+      reference = _data$offsets.reference;
+
+  var isHoriz = ['left', 'right'].indexOf(basePlacement) !== -1;
+
+  var subtractLength = ['top', 'left'].indexOf(basePlacement) === -1;
+
+  popper[isHoriz ? 'left' : 'top'] = reference[basePlacement] - (subtractLength ? popper[isHoriz ? 'width' : 'height'] : 0);
+
+  data.placement = getOppositePlacement(placement);
+  data.offsets.popper = getClientRect(popper);
+
+  return data;
+}</code></pre>
+    </div>
+    <button type="submit" class="btn btn-info mb-5" id="benignSampleCheckButton">Evaluate sample</button>
+
+
+
+    <div class="border my-3 px-2 pt-2">
+      <pre><code id="jsFuckCodeSample">[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]]
+[([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]
+]]+[])[!+[]+!+[]+!+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]
++!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+([][[]]+[])[+!+[]]+(![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[+!+[]]+([]
+[[]]+[])[+[]]+([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(
+!![]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(
+!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+(!![]+[])[+!+[]]]((![]+[])[+!+[]]+(![]+[])[!+[]+!+[
+]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]+(!![]+[])[+[]]+(![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[
+]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[!+[]+!+[]+[+[]]]+[+!+[]]+(!![]+[][(![]+[])[+[]]+([![]]+
+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[!+[]+!+[]+[+[]]])()</code></pre>
+    </div>
+    <button type="submit" class="btn btn-info mb-5" id="jsFuckSampleCheckButton">Evaluate sample</button>
+
+
+
+    <div class="border my-3 px-2 pt-2">
+      <pre><code
+              id="advancedCodeSample">var _0xccba=["\x53\x61\x79\x48\x65\x6C\x6C\x6F","\x47\x65\x74\x43\x6F\x75\x6E\x74",
+"\x4D\x65\x73\x73\x61\x67\x65\x20\x3A\x20","\x59\x6F\x75\x20\x61\x72\x65\x20\x77\x65\x6C\x63\x6F\x6D\x65\x2E"];
+function NewObject(_0x9ab7x2){var _0x9ab7x3=0;this[_0xccba[0]]= function(_0x9ab7x4){_0x9ab7x3++;
+alert(_0x9ab7x2+ _0x9ab7x4)};this[_0xccba[1]]= function(){return _0x9ab7x3}}
+var obj= new NewObject(_0xccba[2]);obj.SayHello(_0xccba[3])</code></pre>
+    </div>
+    <button type="submit" class="btn btn-info mb-5" id="advancedSampleCheckButton">Evaluate sample</button>
+
+    <div class="border my-3 px-2 pt-2">
+      <pre><code
+              id="benignAdvancedCodeSample">function NewObject(prefix)
+{
+    var count=0;
+    this.SayHello=function(msg)
+    {
+          count++;
+          alert(prefix+msg);
+    }
+    this.GetCount=function()
+    {
+          return count;
+    }
+}
+var obj=new NewObject("Message : ");
+obj.SayHello("You are welcome.");</code></pre>
+    </div>
+    <button type="submit" class="btn btn-info mb-5" id="benignAdvancedSampleCheckButton">Evaluate sample</button>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script>
+      $("#obfuscationCheckButton").click(function(e) {
+        e.preventDefault();
+        $("#nonObfuscatedAlert").hide();
+        $("#obfuscatedAlert").hide();
+        $("#toSmallAlert").hide();
+        $("#processingErrorAlert").hide();
+        $("#checkLoading").show();
+
+        $.ajax({
+            type: "POST",
+            url: "/check_obfuscation",
+            data: {
+                code: $("#codeTextArea").val(),
+            },
+            success: function(result) {
+                $("#checkLoading").hide();
+
+                if (result.to_small != undefined) {
+                    $("#toSmallAlert").show();
+                    return;
+                }
+                if (result.processing_error != undefined) {
+                    $("#processingErrorAlert").show();
+                    return;
+                }
+
+                if (result.detection_result) {
+                    var obfuscation_alert_text = "Obfuscation is detected. Obfuscation probability: "
+                        + result.detection_probability + "%. ";
+
+                    if (result.obfuscation_class != "original") {
+                        obfuscation_alert_text += "Obfuscator: " + result.obfuscation_class;
+                    } else {
+                        obfuscation_alert_text += "Obfuscator is not determined."
+                    }
+
+                    $("#obfuscatedAlert").text(obfuscation_alert_text);
+                    $("#obfuscatedAlert").show();
+
+                } else {
+                    var obfuscation_alert_text = "Obfuscation is not detected. Obfuscation probability: "
+                        + result.detection_probability + "%.";
+                    $("#nonObfuscatedAlert").text(obfuscation_alert_text);
+                    $("#nonObfuscatedAlert").show();
+                }
+            },
+            error: function(result) {
+                $("#checkLoading").hide();
+            }
+        });
+    });
+
+    $("#benignSampleCheckButton").click(function(e) {
+        e.preventDefault();
+        $("#codeTextArea").val($("#benignCodeSample")[0].innerText)
+        $("#obfuscationCheckButton").click();
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#codeTextArea").offset().top
+        }, 500);
+    });
+
+    $("#obfuscatedSampleCheckButton").click(function(e) {
+        e.preventDefault();
+        $("#codeTextArea").val($("#obfuscatedCodeSample")[0].innerText)
+        $("#obfuscationCheckButton").click();
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#codeTextArea").offset().top
+        }, 500);
+    });
+
+    $("#jsFuckSampleCheckButton").click(function(e) {
+        e.preventDefault();
+        $("#codeTextArea").val($("#jsFuckCodeSample")[0].innerText)
+        $("#obfuscationCheckButton").click();
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#codeTextArea").offset().top
+        }, 500);
+    });
+
+    $("#advancedSampleCheckButton").click(function(e) {
+        e.preventDefault();
+        $("#codeTextArea").val($("#advancedCodeSample")[0].innerText)
+        $("#obfuscationCheckButton").click();
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#codeTextArea").offset().top
+        }, 500);
+    });
+
+    $("#benignAdvancedSampleCheckButton").click(function(e) {
+        e.preventDefault();
+        $("#codeTextArea").val($("#benignAdvancedCodeSample")[0].innerText)
+        $("#obfuscationCheckButton").click();
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#codeTextArea").offset().top
+        }, 500);
+    });
+    </script>
+  </div>
+  </body>
+</html>
